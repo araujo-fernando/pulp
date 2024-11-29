@@ -828,6 +828,40 @@ class BaseSolverTest:
             """
             from pulp import pulpTestAll
 
+        def test_export_variables_list(self):
+            prob = LpProblem(self._testMethodName, const.LpMinimize)
+            x = LpVariable("x", 0)
+            y = LpVariable("y", 0)
+            z = LpVariable("z", 0)
+            prob += 2 * x + y, "obj"
+            prob += x + y >= 10, "c1"
+            prob += x - y >= 0, "c2"
+
+            data = prob.variables()
+            expected_data = [x, y, z]
+
+            pulpTestCheck(
+                prob, self.solver, [const.LpStatusOptimal], {x: 5, y: 5, z: 0}
+            )
+            self.assertListEqual(data, expected_data)
+
+        def test_export_variables_dict(self):
+            prob = LpProblem(self._testMethodName, const.LpMinimize)
+            x = LpVariable("x", 0)
+            y = LpVariable("y", 0)
+            z = LpVariable("z", 0)
+            prob += 2 * x + y, "obj"
+            prob += x + y >= 10, "c1"
+            prob += x - y >= 0, "c2"
+
+            data = prob.variablesDict()
+            expected_data = {"x": x, "y": y, "z": z}
+
+            pulpTestCheck(
+                prob, self.solver, [const.LpStatusOptimal], {x: 5, y: 5, z: 0}
+            )
+            self.assertDictEqual(data, expected_data)
+
         def test_export_dict_LP(self):
             prob = LpProblem(self._testMethodName, const.LpMinimize)
             x = LpVariable("x", 0, 4)

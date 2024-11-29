@@ -1607,14 +1607,14 @@ class LpProblem:
         return self._variables
 
     def variablesDict(self):
-        variables = {}
-        if self.objective:
-            for v in self.objective:
-                variables[v.name] = v
-        for c in list(self.constraints.values()):
-            for v in c:
-                variables[v.name] = v
-        return variables
+        """
+        Returns the problem variables
+
+        :return: A dict containing the problem variables
+        as values and variables names as keys
+        :rtype: (dict, :py:class:`LpVariable`)
+        """
+        return {v.name: v for v in self.variables()}
 
     def add(self, constraint, name=None):
         self.addConstraint(constraint, name)
